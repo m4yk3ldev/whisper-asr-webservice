@@ -20,9 +20,6 @@ jobs:
           - docker_file: Dockerfile.gpu
             tag_extension: -gpu
             platforms: linux/amd64
-          - docker_file: Dockerfile.gpu.mac
-            tag_extension: -gpu-mac
-            platforms: darwin/arm64,darwin/amd64
     steps:
       - name: Checkout
         uses: actions/checkout@v3
