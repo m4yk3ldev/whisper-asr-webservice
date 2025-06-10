@@ -1,7 +1,7 @@
 import importlib.metadata
 import os
 from os import path
-from typing import Annotated, Optional, Union
+from typing import Annotated, Dict, Optional, Union
 from urllib.parse import quote
 
 import click
@@ -50,6 +50,18 @@ if path.exists(assets_path + "/swagger-ui.css") and path.exists(assets_path + "/
 @app.get("/", response_class=RedirectResponse, include_in_schema=False)
 async def index():
     return "/docs"
+
+
+@app.get("/status", tags=["Endpoints"])
+async def status() -> Dict[str, str]:
+    """Return the status of the service with version information.
+    
+    This endpoint is compatible with Bazarr for service health checking.
+    """
+    return {
+        "version": projectMetadata["Version"],
+        "status": "ok"
+    }
 
 
 @app.post("/asr", tags=["Endpoints"])
