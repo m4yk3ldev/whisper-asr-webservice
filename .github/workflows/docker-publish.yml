@@ -36,12 +36,28 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build and Publish the Docker debug image
         if: github.ref == 'refs/heads/debug'
-        run: |
-          DOCKER_IMAGE_DEBUG=$DOCKER_USER/$REPO_NAME:debug${{ matrix.tag_extension }}
-          docker buildx build . --no-cache --platform=${{ matrix.platforms }} -t "${DOCKER_IMAGE_DEBUG}" -f ${{ matrix.docker_file }} --push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ${{ matrix.docker_file }}
+          platforms: ${{ matrix.platforms }}
+          push: true
+          tags: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}:debug${{ matrix.tag_extension || '' }}
       - name: Build and Publish the Docker image
         if: github.ref != 'refs/heads/debug'
-        run: |
-          DOCKER_IMAGE_LATEST=$DOCKER_USER/$REPO_NAME:latest${{ matrix.tag_extension }}
-          DOCKER_IMAGE_VERSION=$DOCKER_USER/$REPO_NAME:$GITHUB_REF_NAME${{ matrix.tag_extension }}
-          docker buildx build . --no-cache --platform=${{ matrix.platforms }} -t "${DOCKER_IMAGE_LATEST}" -t "${DOCKER_IMAGE_VERSION}" -f ${{ matrix.docker_file }} --push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ${{ matrix.docker_file }}
+          platforms: ${{ matrix.platforms }}
+          push: true
+          tags: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}:latest${{ matrix.tag_extension || '' }}
+      - name: Update Docker Hub Description
+        if: ${{ !matrix.tag_extension && github.ref != 'refs/heads/debug' }}
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ env.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}
+          readme-filepath: ./README.md
+          short-description: "Whisper ASR Webservice with Bazarr support"
