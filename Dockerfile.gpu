@@ -2,22 +2,24 @@ FROM jrottenberg/ffmpeg:4.4-nvidia AS ffmpeg
 
 FROM nvidia/cuda:12.6.3-base-ubuntu22.04
 
-ENV PYTHON_VERSION=3.12
-
 ENV POETRY_VENV=/app/.venv
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get -qq update \
     && apt-get -qq install --no-install-recommends \
-    python${PYTHON_VERSION} \
-    python${PYTHON_VERSION}-venv \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get -qq update \
+    && apt-get -qq install --no-install-recommends \
+    python3.12 \
+    python3.12-venv \
+    python3.12-distutils \
     python3-pip \
     libcudnn8 \
-    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-RUN ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
-    ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
+RUN ln -s -f /usr/bin/python3.12 /usr/bin/python3 && \
+    ln -s -f /usr/bin/python3.12 /usr/bin/python && \
     ln -s -f /usr/bin/pip3 /usr/bin/pip
 
 RUN python3 -m venv $POETRY_VENV \
