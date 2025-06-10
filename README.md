@@ -30,7 +30,7 @@ This fork supports the following whisper models:
 docker run -d -p 9000:9000 \
   -e ASR_MODEL=base \
   -e ASR_ENGINE=openai_whisper \
-  m4yk3ldev/whisper-asr-webservice:latest
+  hanibal920915/whisper-asr-webservice:latest-py3.12
 ```
 
 ### GPU
@@ -41,7 +41,7 @@ docker run -d -p 9000:9000 \
 docker run -d --gpus all -p 9000:9000 \
   -e ASR_MODEL=base \
   -e ASR_ENGINE=openai_whisper \
-  m4yk3ldev/whisper-asr-webservice:latest-gpu
+  hanibal920915/whisper-asr-webservice:latest-py3.12-gpu
 ```
 
 #### Mac (Apple Silicon or Intel)
@@ -50,7 +50,7 @@ docker run -d --gpus all -p 9000:9000 \
 docker run -d -p 9000:9000 \
   -e ASR_MODEL=base \
   -e ASR_ENGINE=openai_whisper \
-  m4yk3ldev/whisper-asr-webservice:latest-gpu-mac
+  hanibal920915/whisper-asr-webservice:latest-py3.12-gpu-mac
 ```
 
 #### Cache
@@ -60,7 +60,7 @@ To reduce container startup time by avoiding repeated downloads, you can persist
 ```shell
 docker run -d -p 9000:9000 \
   -v $PWD/cache:/root/.cache/ \
-  m4yk3ldev/whisper-asr-webservice:latest
+  hanibal920915/whisper-asr-webservice:latest-py3.12
 ```
 
 ## Key Features
@@ -145,6 +145,7 @@ After starting the service, visit `http://localhost:9000/docs` or `http://0.0.0.
 
 ## Recent Improvements
 
+- **Python 3.12 Upgrade**: Updated to Python 3.12 for improved performance and features
 - **Multi-platform Support**: Added support for macOS (Intel and Apple Silicon) and Raspberry Pi
 - **GPU Acceleration**: Added Metal acceleration support for Mac
 - **Spanish Subtitle Synchronization**: Improved timing and segmentation for Spanish audio

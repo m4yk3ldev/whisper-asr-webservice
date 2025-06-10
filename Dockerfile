@@ -1,6 +1,6 @@
 FROM onerahmet/ffmpeg:n7.1 AS ffmpeg
 
-FROM python:3.10-bookworm
+FROM python:3.12-bookworm
 
 ENV POETRY_VENV=/app/.venv
 

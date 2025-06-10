@@ -17,7 +17,7 @@ url = "https://download.pytorch.org/whl/cpu"
 priority = "explicit"
 
 [tool.poetry.dependencies]
-python = "<3.13,>=3.10"
+python = "<3.13,>=3.12"
 fastapi = "^0.115.8"
 uvicorn = { extras = ["standard"], version = "^0.34.0" }
 python-multipart = "^0.0.20"
@@ -40,7 +40,7 @@ torchaudio = [
     { version = "2.6.0", source = "pytorch-cpu", markers = "platform_machine == 'x86_64' and sys_platform != 'darwin'" },
 ]
 
-[poetry.group.dev.dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 ruff = "^0.9.6"
 black = "^25.1.0"

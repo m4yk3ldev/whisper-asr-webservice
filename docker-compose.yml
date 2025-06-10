@@ -1,6 +1,6 @@
 services:
   whisper-asr-webservice:
-    image: hanibal920915/whisper-asr-webservice:latest
+    image: hanibal920915/whisper-asr-webservice:latest-py3.12
     build:
       context: .
       dockerfile: Dockerfile
