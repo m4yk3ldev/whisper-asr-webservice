@@ -1,17 +1,43 @@
-version: "3.4"
+version: '3.8'
 
 services:
   whisper-asr-webservice:
+    image: m4yk3ldev/whisper-asr-webservice:latest
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: whisper-asr-webservice
+    restart: unless-stopped
     environment:
+      # ASR model to use (tiny, base, small, medium, large)
       - ASR_MODEL=base
+      # ASR engine (openai_whisper, faster_whisper, whisperx)
+      - ASR_ENGINE=openai_whisper
+      # Computation device (cuda, cpu)
+      - ASR_DEVICE=cpu
+      # Model quantization (float32, float16, int8)
+      - ASR_QUANTIZATION=int8
+      # Hugging Face token (required for whisperx)
+      # - HF_TOKEN=your_token_here
+      # Subtitle options
+      - SUBTITLE_MAX_LINE_WIDTH=1000
+      - SUBTITLE_MAX_LINE_COUNT=2
+      - SUBTITLE_HIGHLIGHT_WORDS=false
     ports:
       - "9000:9000"
     volumes:
+      # Mount code for development (comment out in production)
       - ./app:/app/app
+      # Model cache persistence
       - cache-whisper:/root/.cache
+    # Resource configuration (optional)
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
 
 volumes:
   cache-whisper:
+    name: whisper-asr-cache
