@@ -1,4 +1,4 @@
-FROM onerahmet/ffmpeg:n7.1 AS ffmpeg
+FROM mwader/static-ffmpeg:latest AS ffmpeg
 
 FROM python:3.12-bookworm
 
@@ -13,7 +13,7 @@ ENV PATH="${PATH}:${POETRY_VENV}/bin"
 WORKDIR /app
 
 COPY . /app
-COPY --from=ffmpeg /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
+COPY --from=ffmpeg /ffmpeg /usr/local/bin/ffmpeg
 
 RUN poetry config virtualenvs.in-project true
 RUN poetry install
