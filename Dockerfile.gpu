@@ -34,7 +34,7 @@ RUN poetry config virtualenvs.in-project true
 RUN poetry install --no-root
 
 COPY . .
-COPY --from=ffmpeg /ffmpeg /usr/local/bin/ffmpeg
+COPY --from=ffmpeg /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
 
 RUN poetry install
 RUN $POETRY_VENV/bin/pip install torch==2.6.0+cu126 torchaudio==2.6.0+cu126 --index-url https://download.pytorch.org/whl/cu126

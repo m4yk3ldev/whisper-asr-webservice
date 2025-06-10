@@ -13,7 +13,7 @@ ENV PATH="${PATH}:${POETRY_VENV}/bin"
 WORKDIR /app
 
 COPY . /app
-COPY --from=ffmpeg /ffmpeg /usr/local/bin/ffmpeg
+COPY --from=ffmpeg /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
 
 COPY pyproject.toml ./
 
