@@ -45,3 +45,11 @@ class CONFIG:
     SUBTITLE_MAX_LINE_WIDTH = int(os.getenv("SUBTITLE_MAX_LINE_WIDTH", 1000))
     SUBTITLE_MAX_LINE_COUNT = int(os.getenv("SUBTITLE_MAX_LINE_COUNT", 2))
     SUBTITLE_HIGHLIGHT_WORDS = os.getenv("SUBTITLE_HIGHLIGHT_WORDS", "false").lower() == "true"
+    
+    # Spanish subtitle synchronization improvements
+    # Controls the time offset adjustment for better sync (in milliseconds)
+    SPANISH_SUBTITLE_OFFSET = int(os.getenv("SPANISH_SUBTITLE_OFFSET", 0))
+    # Controls the segment merging threshold for Spanish (in milliseconds)
+    SPANISH_SEGMENT_THRESHOLD = int(os.getenv("SPANISH_SEGMENT_THRESHOLD", 1000))
+    # Enable improved Spanish synchronization
+    IMPROVE_SPANISH_SYNC = os.getenv("IMPROVE_SPANISH_SYNC", "true").lower() == "true"

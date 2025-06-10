@@ -21,6 +21,10 @@ services:
       - SUBTITLE_MAX_LINE_WIDTH=1000
       - SUBTITLE_MAX_LINE_COUNT=2
       - SUBTITLE_HIGHLIGHT_WORDS=false
+      # Spanish subtitle synchronization improvements
+      - IMPROVE_SPANISH_SYNC=true
+      - SPANISH_SUBTITLE_OFFSET=-200
+      - SPANISH_SEGMENT_THRESHOLD=1000
     ports:
       - "9000:9000"
     volumes:

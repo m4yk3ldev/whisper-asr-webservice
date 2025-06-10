@@ -75,9 +75,50 @@ class OpenAIWhisperASR(ASRModel):
         detected_lang_code = max(probs, key=probs.get)
 
         return detected_lang_code, probs[max(probs)]
+        
+    def _improve_spanish_sync(self, result):
+        """Apply Spanish-specific improvements to the transcription result."""
+        if not result.get("segments"):
+            return
+            
+        # Apply offset to start and end times for better sync
+        offset_sec = CONFIG.SPANISH_SUBTITLE_OFFSET / 1000.0
+        threshold_sec = CONFIG.SPANISH_SEGMENT_THRESHOLD / 1000.0
+        
+        # Adjust timing for each segment
+        for segment in result["segments"]:
+            # Apply offset to improve synchronization
+            segment["start"] = max(0, segment["start"] + offset_sec)
+            segment["end"] = segment["end"] + offset_sec
+            
+            # Adjust word-level timestamps if available
+            if "words" in segment and segment["words"]:
+                for word in segment["words"]:
+                    word["start"] = max(0, word["start"] + offset_sec)
+                    word["end"] = word["end"] + offset_sec
+        
+        # Optimize segment breaks for Spanish
+        # Spanish often needs shorter segments for better sync
+        new_segments = []
+        for i, segment in enumerate(result["segments"]):
+            if i > 0 and segment["start"] - result["segments"][i-1]["end"] < threshold_sec:
+                # If segments are close, ensure there's a small gap
+                segment["start"] = result["segments"][i-1]["end"] + 0.1
+            new_segments.append(segment)
+            
+        result["segments"] = new_segments
 
     def write_result(self, result: dict, file: BinaryIO, output: Union[str, None]):
-        options = {"max_line_width": 1000, "max_line_count": 10, "highlight_words": False}
+        options = {
+            "max_line_width": CONFIG.SUBTITLE_MAX_LINE_WIDTH, 
+            "max_line_count": CONFIG.SUBTITLE_MAX_LINE_COUNT, 
+            "highlight_words": CONFIG.SUBTITLE_HIGHLIGHT_WORDS
+        }
+        
+        # Apply Spanish-specific improvements if enabled and language is Spanish
+        if CONFIG.IMPROVE_SPANISH_SYNC and result.get("language") == "es":
+            self._improve_spanish_sync(result)
+            
         if output == "srt":
             WriteSRT(ResultWriter).write_result(result, file=file, options=options)
         elif output == "vtt":
