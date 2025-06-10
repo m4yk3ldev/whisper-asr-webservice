@@ -13,7 +13,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get -qq install --no-install-recommends \
     python3.12 \
     python3.12-venv \
-    python3.12-distutils \
+    python3.12-dev \
     python3-pip \
     libcudnn8 \
     && rm -rf /var/lib/apt/lists/*
@@ -43,4 +43,4 @@ RUN $POETRY_VENV/bin/pip install torch==2.6.0+cu126 torchaudio==2.6.0+cu126 --in
 
 EXPOSE 9000
 
-CMD whisper-asr-webservice
+CMD ["whisper-asr-webservice"]

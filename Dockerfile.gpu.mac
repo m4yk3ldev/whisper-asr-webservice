@@ -34,4 +34,4 @@ ENV ASR_DEVICE="mps"
 
 EXPOSE 9000
 
-CMD whisper-asr-webservice
+CMD ["whisper-asr-webservice"]
