@@ -1,5 +1,5 @@
 ![Licence](https://img.shields.io/github/license/m4yk3ldev/whisper-asr-webservice.svg)
-![Docker Pulls](https://img.shields.io/docker/pulls/m4yk3ldev/whisper-asr-webservice.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/hanibal920915/whisper-asr-webservice.svg)
 
 # Whisper ASR Box - Fork by m4yk3ldev
 
@@ -18,7 +18,7 @@ This fork supports the following whisper models:
 ### Platform Support
 
 - **CPU Version**: Linux (AMD64, ARM64, ARMv7), macOS (Intel, Apple Silicon), Raspberry Pi
-- **GPU Version**: 
+- **GPU Version**:
   - Linux with NVIDIA GPUs
   - macOS with Metal acceleration (Apple Silicon & Intel)
 
@@ -36,6 +36,7 @@ docker run -d -p 9000:9000 \
 ### GPU
 
 #### Linux with NVIDIA GPU
+
 ```shell
 docker run -d --gpus all -p 9000:9000 \
   -e ASR_MODEL=base \
@@ -44,6 +45,7 @@ docker run -d --gpus all -p 9000:9000 \
 ```
 
 #### Mac (Apple Silicon or Intel)
+
 ```shell
 docker run -d -p 9000:9000 \
   -e ASR_MODEL=base \
