@@ -9,7 +9,7 @@ on:
       - debug
 
 env:
-  DOCKER_USER: ${{ env.DOCKER_USER }}
+  DOCKER_USER: hanibal920915
   REPO_NAME: whisper-asr-webservice
 jobs:
   build:
