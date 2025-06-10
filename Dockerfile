@@ -15,6 +15,8 @@ WORKDIR /app
 COPY . /app
 COPY --from=ffmpeg /ffmpeg /usr/local/bin/ffmpeg
 
+COPY pyproject.toml ./
+
 RUN poetry config virtualenvs.in-project true
 RUN poetry install
 
