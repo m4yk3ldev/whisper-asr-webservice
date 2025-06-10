@@ -1,4 +1,4 @@
-FROM mwader/static-ffmpeg:latest AS ffmpeg
+FROM jrottenberg/ffmpeg:4.4-ubuntu2004 AS ffmpeg
 
 FROM python:3.12-bookworm
 
