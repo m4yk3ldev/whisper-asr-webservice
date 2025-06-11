@@ -17,7 +17,7 @@ url = "https://download.pytorch.org/whl/cpu"
 priority = "explicit"
 
 [tool.poetry.dependencies]
-python = "<3.13,>=3.12"
+python = "<3.11,>=3.10"
 fastapi = "^0.115.8"
 uvicorn = { extras = ["standard"], version = "^0.34.0" }
 python-multipart = "^0.0.20"
