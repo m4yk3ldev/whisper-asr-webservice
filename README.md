@@ -17,10 +17,9 @@ This fork supports the following whisper models:
 
 ### Platform Support
 
-- **CPU Version**: Linux (AMD64, ARM64, ARMv7), macOS (Intel, Apple Silicon), Raspberry Pi
+- **CPU Version**: Linux (AMD64, ARM64, ARMv7), Raspberry Pi
 - **GPU Version**:
   - Linux with NVIDIA GPUs
-  - macOS with Metal acceleration (Apple Silicon & Intel)
 
 ## Quick Usage
 
@@ -30,7 +29,7 @@ This fork supports the following whisper models:
 docker run -d -p 9000:9000 \
   -e ASR_MODEL=base \
   -e ASR_ENGINE=openai_whisper \
-  hanibal920915/whisper-asr-webservice:latest-py3.12
+  hanibal920915/whisper-asr-webservice:latest
 ```
 
 ### GPU
@@ -41,17 +40,10 @@ docker run -d -p 9000:9000 \
 docker run -d --gpus all -p 9000:9000 \
   -e ASR_MODEL=base \
   -e ASR_ENGINE=openai_whisper \
-  hanibal920915/whisper-asr-webservice:latest-py3.12-gpu
+  hanibal920915/whisper-asr-webservice:latest-gpu
 ```
 
-#### Mac (Apple Silicon or Intel)
 
-```shell
-docker run -d -p 9000:9000 \
-  -e ASR_MODEL=base \
-  -e ASR_ENGINE=openai_whisper \
-  hanibal920915/whisper-asr-webservice:latest-py3.12-gpu-mac
-```
 
 #### Cache
 
@@ -60,7 +52,7 @@ To reduce container startup time by avoiding repeated downloads, you can persist
 ```shell
 docker run -d -p 9000:9000 \
   -v $PWD/cache:/root/.cache/ \
-  hanibal920915/whisper-asr-webservice:latest-py3.12
+  hanibal920915/whisper-asr-webservice:latest
 ```
 
 ## Key Features
@@ -71,8 +63,8 @@ docker run -d -p 9000:9000 \
 - Voice activity detection (VAD) filtering
 - Speaker diarization (with WhisperX)
 - FFmpeg integration for broad audio/video format support
-- GPU acceleration support (NVIDIA CUDA for Linux, Metal for Mac)
-- Multi-platform support (Linux, Mac, Raspberry Pi)
+- GPU acceleration support (NVIDIA CUDA for Linux)
+- Multi-platform support (Linux, Raspberry Pi)
 - Improved Spanish subtitle synchronization
 - Configurable model loading/unloading
 - REST API with integrated Swagger UI documentation
@@ -99,15 +91,68 @@ For complete documentation of the original project, visit:
 
 ## Using Docker Compose
 
-This fork includes an enhanced `docker-compose.yml` file for easy deployment:
+This fork includes enhanced Docker Compose files for easy deployment:
+
+### Standard CPU Version
+
+```yaml
+# docker-compose.yml
+services:
+  whisper-asr-webservice:
+    image: hanibal920915/whisper-asr-webservice
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - ASR_MODEL=base # Model to use (tiny, base, small, medium, large-v3)
+      - ASR_ENGINE=openai_whisper # Engine to use (openai_whisper, faster_whisper, whisperx)
+      - MODEL_IDLE_TIMEOUT=300 # Idle timeout to unload model (in seconds)
+      - IMPROVE_SPANISH_SYNC=true # Improve Spanish subtitle synchronization
+      - SPANISH_SUBTITLE_OFFSET=-200 # Time offset in milliseconds for Spanish subtitles
+      - SPANISH_SEGMENT_THRESHOLD=1000 # Threshold in milliseconds for merging Spanish segments
+    volumes:
+      - ./cache:/root/.cache/ # Persist cache to avoid repeated downloads
+    restart: unless-stopped
+```
+
+### GPU Version
+
+```yaml
+# docker-compose.gpu.yml
+services:
+  whisper-asr-webservice:
+    image: hanibal920915/whisper-asr-webservice:latest-gpu
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    ports:
+      - "9000:9000"
+    environment:
+      - ASR_MODEL=base
+      - ASR_ENGINE=openai_whisper
+      - ASR_DEVICE=cuda
+    volumes:
+      - ./cache:/root/.cache/
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+```
+
+### Usage
 
 ```shell
-# Clone the repository
-git clone https://github.com/m4yk3ldev/whisper-asr-webservice.git
-cd whisper-asr-webservice
-
-# Start the service
+# For CPU version
 docker compose up -d
+
+# For GPU version
+docker compose -f docker-compose.gpu.yml up -d
 ```
 
 ## Bazarr Support
@@ -145,10 +190,11 @@ After starting the service, visit `http://localhost:9000/docs` or `http://0.0.0.
 
 ## Recent Improvements
 
-- **Python 3.12 Upgrade**: Updated to Python 3.12 for improved performance and features
-- **Multi-platform Support**: Added support for macOS (Intel and Apple Silicon) and Raspberry Pi
-- **GPU Acceleration**: Added Metal acceleration support for Mac
+- **Python 3.10 Compatibility**: Compatible with Python 3.10 for better stability and wider support
+- **Multi-platform Support**: Added support for Raspberry Pi and various Linux architectures
+- **GPU Acceleration**: NVIDIA CUDA support for Linux
 - **Spanish Subtitle Synchronization**: Improved timing and segmentation for Spanish audio
+- **Bazarr Integration**: Added `/status` endpoint for Bazarr compatibility
 - **Integrated Swagger UI**: Removed Docker dependency for API documentation
 - **CORS Support**: Added Cross-Origin Resource Sharing for better frontend integration
 - **Enhanced Error Handling**: Better error responses and validation
