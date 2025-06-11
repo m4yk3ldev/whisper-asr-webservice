@@ -1,6 +1,6 @@
 FROM jrottenberg/ffmpeg:4.4-nvidia AS ffmpeg
 
-FROM nvidia/cuda:12.6.3-base-ubuntu22.04
+FROM nvidia/cuda:11.8.0-base-ubuntu22.04
 
 ENV POETRY_VENV=/app/.venv
 
@@ -11,15 +11,15 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && add-apt-repository ppa:deadsnakes/ppa \
     && apt-get -qq update \
     && apt-get -qq install --no-install-recommends \
-    python3.12 \
-    python3.12-venv \
-    python3.12-dev \
+    python3.10 \
+    python3.10-venv \
+    python3.10-distutils \
     python3-pip \
     libcudnn8 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN ln -s -f /usr/bin/python3.12 /usr/bin/python3 && \
-    ln -s -f /usr/bin/python3.12 /usr/bin/python && \
+RUN ln -s -f /usr/bin/python3.10 /usr/bin/python3 && \
+    ln -s -f /usr/bin/python3.10 /usr/bin/python && \
     ln -s -f /usr/bin/pip3 /usr/bin/pip
 
 RUN python3 -m venv $POETRY_VENV \
@@ -39,7 +39,7 @@ COPY . .
 COPY --from=ffmpeg /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
 
 RUN poetry install
-RUN $POETRY_VENV/bin/pip install torch==2.6.0+cu126 torchaudio==2.6.0+cu126 --index-url https://download.pytorch.org/whl/cu126
+RUN $POETRY_VENV/bin/pip install torch==2.1.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118
 
 EXPOSE 9000
 

@@ -40,7 +40,7 @@ jobs:
           file: ${{ matrix.docker_file }}
           platforms: ${{ matrix.platforms }}
           push: true
-          tags: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}:debug-py3.12${{ matrix.tag_extension || '' }}
+          tags: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}:debug${{ matrix.tag_extension || '' }}
       - name: Build and Publish the Docker image
         if: github.ref != 'refs/heads/debug'
         uses: docker/build-push-action@v2
@@ -49,7 +49,7 @@ jobs:
           file: ${{ matrix.docker_file }}
           platforms: ${{ matrix.platforms }}
           push: true
-          tags: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}:latest-py3.12${{ matrix.tag_extension || '' }}
+          tags: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}:latest${{ matrix.tag_extension || '' }}
       - name: Update Docker Hub Description
         if: ${{ !matrix.tag_extension && github.ref != 'refs/heads/debug' }}
         uses: peter-evans/dockerhub-description@v3

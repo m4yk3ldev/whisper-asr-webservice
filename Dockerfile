@@ -1,6 +1,6 @@
 FROM jrottenberg/ffmpeg:4.4-ubuntu2004 AS ffmpeg
 
-FROM python:3.12-bookworm
+FROM python:3.10-bookworm
 
 ENV POETRY_VENV=/app/.venv
 
